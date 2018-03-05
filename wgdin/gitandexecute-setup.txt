@@ -1,0 +1,91 @@
+#!/bin/bash
+#Dinero Masternode Install setup for win-Git-Dinero-Masternode.bat
+#WGDM v0.1.1 - cobrakenji
+# DIN - DQ3Q59RHAD5T1reZGLXS5ernnZrNW3EJZ1
+# BTC - 1HgPZvFRKuvsuLXwRtrLsJsws7ivZQScJt
+clear
+
+output() {
+    printf "\E[1;31;40m"
+    echo $1
+    printf "\E[0m"
+}
+
+echo Donations welcome
+echo 'DIN - DQ3Q59RHAD5T1reZGLXS5ernnZrNW3EJZ1'
+echo 'BTC - 1HgPZvFRKuvsuLXwRtrLsJsws7ivZQScJt'
+output " :heart: - CobraKenji"
+sleep 3s
+echo Thank you.
+output ""
+output " Git install Dinero masternode"
+output "##"
+echo ##
+echo ##
+echo '##'
+echo 'Please note - when you enter a password on linux, you will not see anything'
+echo 'Again, you will not see the password as you type. No ****, nothing.'
+echo ##
+echo ##
+echo 'Please enter your information carefully.'
+echo 'Do not use UPPERCASE characters in your username'
+echo ##
+read -p '## Create a VPS username: ' newuser
+read -p '## Enter your ROOT password: ' rtpwd
+
+response="n"
+while [ $response = "n" ]
+do
+        echo "We will connect to the VPS as root and create a new user"
+		echo "before installing the Dinero Masternode."
+
+		 # yes no message below
+        echo -n "Continue now [y/n]?"
+		echo ' or ctrl+c to exit'
+        read -n1 Input
+        echo # completes
+        case $Input in
+                [Yy]):
+                response="y"
+                ;;
+        esac
+done
+output "###############################"
+
+#Add user and add to sudoers
+adduser $newuser
+adduser $newuser sudo
+cd && mkdir -p ../home/$newuser/
+cd && cd ../..
+cd home/$newuser/
+clear
+
+#Creating dinmnlaunch - git and execute script
+echo '##' && echo ##
+cat > dinmnlaunch << EOF
+sudo apt-get install -y git
+sudo apt-get update
+cd
+sudo mkdir masternode-install && cd masternode-install
+sudo git clone https://github.com/CobraKenji/dinero.git && cd dinero 
+sudo sed -i 's/\r//' gitandexecute && bash gitandexecute
+EOF
+
+
+#DineroCoin git  - official installer
+#cat > dinmnlaunch << EOF
+#sudo apt-get install -y git
+#sudo apt-get update
+#cd
+#sudo git clone https://github.com/overlord-ops/dinero-mn-install.git && cd dinero-mn-install && bash install.sh
+#EOF
+
+
+echo '## Dinero Masternode launch script ready!'
+echo '## To begin Dinero Masternode setup, type:'
+echo -----------------------
+output 'bash dinmnlaunch'
+echo -----------------------
+echo ''
+su $newuser
+exit
